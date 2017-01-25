@@ -18,20 +18,11 @@ def envia_mail(log, email):
 	msg.attach(part1)
 	username = 'emailfrom@email.com.br'
 	password = 'pass'
-	try:
-		server = smtplib.SMTP('smtp.email.com.br:587')
-	except:
-		return
+	server = smtplib.SMTP('smtp.email.com.br:587')
 	server.ehlo()
 	server.starttls()
-	try:
-		server.login(username, password)
-	except:
-		return
-	try:
-		server.sendmail(fromaddr, email, msg.as_string())
-	except:
-		return
+	server.login(username, password)
+	server.sendmail(fromaddr, email, msg.as_string())
 	server.quit()
 
 def dir_exe():
@@ -41,14 +32,12 @@ data_old = []
 d = feedparser.parse('http://url.com/feed')
 email_arq = open(dir_exe() + '/emails.txt', 'r')
 email_lista = email_arq.read().split(';')
-try:
-    if not d.entries[0].published in data_old:
-	    data_old.append(d.entries[0].published)
-		assunto = d.entries[0].title.encode('utf-8') +' '+ d.entries[0].description.encode('utf-8') + d.entries[0].link.encode('utf-8')
-		for email in email_lista:
-			envia_mail(assunto, email)
-except: 
-		pass
+if not d.entries[0].published in data_old:
+	data_old.append(d.entries[0].published)
+	assunto = d.entries[0].title.encode('utf-8') +' '+ d.entries[0].description.encode('utf-8') + d.entries[0].link.encode('utf-8')
+	for email in email_lista:
+		envia_mail(assunto, email)
+
 
 
 
